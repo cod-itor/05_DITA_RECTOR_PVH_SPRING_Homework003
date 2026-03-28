@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Venue {
-    private Long VenueId;
-    private String VenueName;
-    private String Location;
+@AllArgsConstructor
+public class Attendees {
+    private Long attendeeId;
+    private String attendeeName;
+    private String email;
+
+
 }
