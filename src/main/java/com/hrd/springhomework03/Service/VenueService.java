@@ -9,5 +9,5 @@ import java.util.List;
 public interface VenueService {
 
 
-    List<Venue> getAllVenue(Integer size , Integer page);
+    List<Venue> getAllVenue(Integer page , Integer size);
 }
