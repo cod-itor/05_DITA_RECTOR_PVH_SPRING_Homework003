@@ -1,4 +1,4 @@
-package com.hrd.springhomework03.Model.Entity;
+package com.hrd.springhomework03.Model.Request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Events {
-    private Long eventId;
+public class RequestEvent {
     private String eventName;
     private String eventDate;
     private Long venueId;
