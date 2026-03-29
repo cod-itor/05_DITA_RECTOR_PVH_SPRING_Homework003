@@ -11,5 +11,5 @@ public class Events {
     private Long eventId;
     private String eventName;
     private String eventDate;
-    private Long venueId;
+    private Venue venueId;
 }
