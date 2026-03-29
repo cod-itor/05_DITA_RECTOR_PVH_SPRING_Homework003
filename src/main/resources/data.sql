@@ -1,5 +1,5 @@
 -- 1. Populate Venues first
-INSERT INTO venue (venue_name, location) VALUES
+INSERT INTO venues (venue_name, location) VALUES
                                               ('Grand Tech Convention Center', 'New York, NY'),
                                               ('Innovation Hub', 'San Francisco, CA'),
                                               ('The Learning Annex', 'Chicago, IL');

@@ -1,17 +1,19 @@
 package com.hrd.springhomework03.Service;
 
 import com.hrd.springhomework03.Model.Entity.Events;
+import com.hrd.springhomework03.Model.Request.RequestEvent;
+import com.hrd.springhomework03.Model.Response.ApiResponse;
 
 import java.util.List;
 
 public interface EventService {
-    List<Events> getAllEvents(Integer page, Integer size);
+    ApiResponse<List<Events>> getAllEvents(Integer page, Integer size);
 
-    Events getEventById(Long eventId);
+    ApiResponse<Events> getEventById(Long eventId);
 
-    void createEvent(Events event);
+    ApiResponse<Events> createEvent(RequestEvent requestEvent);
 
-    void updateEvent(Long eventId, Events event);
+    ApiResponse<Events> updateEvent(Long eventId, RequestEvent requestEvent);
 
-    void deleteEvent(Long eventId);
+    ApiResponse<Void> deleteEvent(Long eventId);
 }
