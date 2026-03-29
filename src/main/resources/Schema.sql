@@ -24,7 +24,6 @@ CREATE TABLE events (
                                 ON DELETE CASCADE -- If a venue is deleted, its events are also deleted
 );
 
--- 4. Create the junction table (depends on events and attendees)
 CREATE TABLE event_attendee (
                                 attendee_id INTEGER NOT NULL,
                                 event_id INTEGER NOT NULL,
