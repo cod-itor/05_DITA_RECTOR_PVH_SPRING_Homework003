@@ -8,7 +8,6 @@ import org.apache.ibatis.type.Alias;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Alias("venue")
 public class Venue {
     private Long venueId;
     private String venueName;
