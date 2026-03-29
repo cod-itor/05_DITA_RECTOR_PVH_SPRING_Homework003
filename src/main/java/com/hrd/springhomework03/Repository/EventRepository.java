@@ -2,15 +2,19 @@ package com.hrd.springhomework03.Repository;
 
 import com.hrd.springhomework03.Model.Entity.Events;
 import com.hrd.springhomework03.Model.Request.RequestEvent;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface EventRepository {
+    @Results(id="EventMapper" , value = {
+            @Result(property = "eventId" , column = "event_id"),
+            @Result(property = "eventName", column = "event_name"),
+            @Result(property = "eventDate", column = "event_date"),
+            @Result(property = "venueId", column = "event_id", one = @One(select = "com.hrd.springhomework03.Repository.VenueRepository.getVenueById"))
+    })
+
 
     @Select("SELECT * FROM events LIMIT #{size} OFFSET #{offset}")
     List<Events> getAllEvents(Integer offset, Integer size);

@@ -10,7 +10,8 @@ import java.util.List;
 public interface VenueRepository {
     @Results(id="VenueMapper" , value = {
             @Result(property = "venueId" , column = "venue_id"),
-            @Result(property = "venueName", column = "venue_name"),
+            @Result(property = "venueName", column = "venue_name")
+
     })
 
     @Select("SELECT * FROM venues LIMIT #{size} OFFSET #{offset}")
