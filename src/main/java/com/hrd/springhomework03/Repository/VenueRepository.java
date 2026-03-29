@@ -20,15 +20,11 @@ public interface VenueRepository {
     @Select("SELECT * FROM venues WHERE venue_id = #{venueId}")
     Venue getVenueById(Long venueId);
     @ResultMap("VenueMapper")
-    @Select("INSERT INTO venues (venue_name, location) " +
-            "VALUES (#{req.venueName}, #{req.location}) " +
-            "RETURNING *")
+    @Select("INSERT INTO venues (venue_name, location) VALUES (#{req.venueName}, #{req.location}) RETURNING *")
     Venue createVenue(@Param("req") RequestVenue requestVenue);
+
     @ResultMap("VenueMapper")
-    @Select("UPDATE venues SET venue_name = #{req.venueName}, " +
-            "location = #{req.location} " +
-            "WHERE venue_id = #{venueId} " +
-            "RETURNING *")
+    @Select("UPDATE venues SET venue_name = #{req.venueName}, location = #{req.location} WHERE venue_id = #{venueId} RETURNING *")
     Venue updateVenue(@Param("venueId") Long venueId, @Param("req") RequestVenue requestVenue);
     @ResultMap("VenueMapper")
     @Delete("DELETE FROM venues WHERE venue_id = #{venueId}")
