@@ -56,9 +56,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public ApiResponse<Events> createEvent(RequestEvent requestEvent) {
-        Long newEventId = eventRepository.createEvent(requestEvent);
+        Events created = eventRepository.createEvent(requestEvent);
 
-        if (newEventId == null) {
+        if (created == null) {
             return ApiResponse.<Events>builder()
                     .success(false)
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -67,8 +67,6 @@ public class EventServiceImpl implements EventService {
                     .timestamp(Instant.now())
                     .build();
         }
-
-        Events created = eventRepository.getEventById(newEventId);
 
         return ApiResponse.<Events>builder()
                 .success(true)
@@ -92,9 +90,9 @@ public class EventServiceImpl implements EventService {
                     .build();
         }
 
-        int rows = eventRepository.updateEvent(eventId, requestEvent);
+        Events updated = eventRepository.updateEvent(eventId, requestEvent);
 
-        if (rows == 0) {
+        if (updated == null) {
             return ApiResponse.<Events>builder()
                     .success(false)
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -103,7 +101,6 @@ public class EventServiceImpl implements EventService {
                     .build();
         }
 
-        Events updated = eventRepository.getEventById(eventId);
         return ApiResponse.<Events>builder()
                 .success(true)
                 .status(HttpStatus.OK.value())

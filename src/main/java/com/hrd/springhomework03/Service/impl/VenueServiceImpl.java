@@ -56,9 +56,9 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public ApiResponse<Venue> createVenue(RequestVenue requestVenue) {
-        Long newVenueId = venueRepository.createVenue(requestVenue);
+        Venue created = venueRepository.createVenue(requestVenue);
 
-        if (newVenueId == null) {
+        if (created == null) {
             return ApiResponse.<Venue>builder()
                     .success(false)
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -67,8 +67,6 @@ public class VenueServiceImpl implements VenueService {
                     .timestamp(Instant.now())
                     .build();
         }
-
-        Venue created = venueRepository.getVenueById(newVenueId);
 
         return ApiResponse.<Venue>builder()
                 .success(true)
@@ -92,9 +90,9 @@ public class VenueServiceImpl implements VenueService {
                     .build();
         }
 
-        int rows = venueRepository.updateVenue(venueId, requestVenue);
+        Venue updated = venueRepository.updateVenue(venueId, requestVenue);
 
-        if (rows == 0) {
+        if (updated == null) {
             return ApiResponse.<Venue>builder()
                     .success(false)
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -103,7 +101,6 @@ public class VenueServiceImpl implements VenueService {
                     .build();
         }
 
-        Venue updated = venueRepository.getVenueById(venueId);
         return ApiResponse.<Venue>builder()
                 .success(true)
                 .status(HttpStatus.OK.value())
