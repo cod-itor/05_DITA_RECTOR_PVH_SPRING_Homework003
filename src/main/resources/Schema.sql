@@ -1,18 +1,15 @@
--- 1. Create the venues table first (no dependencies)
 CREATE TABLE venues (
                         venue_id SERIAL PRIMARY KEY,
                         venue_name VARCHAR(255) NOT NULL,
                         location TEXT NOT NULL
 );
 
--- 2. Create the attendees table (no dependencies)
 CREATE TABLE attendees (
                            attendee_id SERIAL PRIMARY KEY,
                            attendee_name VARCHAR(255) NOT NULL,
                            email VARCHAR(255) UNIQUE NOT NULL
 );
 
--- 3. Create the events table (depends on venues)
 CREATE TABLE events (
                         event_id SERIAL PRIMARY KEY,
                         event_name VARCHAR(255) NOT NULL,
