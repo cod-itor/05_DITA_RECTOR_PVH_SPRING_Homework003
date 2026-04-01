@@ -10,15 +10,15 @@ import java.util.List;
 public interface VenueRepository {
     @Results(id="VenueMapper" , value = {
             @Result(property = "venueId" , column = "venue_id"),
-            @Result(property = "venueName", column = "venue_name")
-
+            @Result(property = "venueName", column = "venue_name"),
+            @Result(property = "location", column = "location")
     })
 
     @Select("SELECT * FROM venues LIMIT #{size} OFFSET #{offset}")
     List<Venue> getAllVenue(Integer offset, Integer size);
     @ResultMap("VenueMapper")
     @Select("SELECT * FROM venues WHERE venue_id = #{venueId}")
-    Venue getVenueById(Long venueId);
+        Venue getVenueById(Long venueId);
     @ResultMap("VenueMapper")
     @Select("INSERT INTO venues (venue_name, location) VALUES (#{req.venueName}, #{req.location}) RETURNING *")
     Venue createVenue(@Param("req") RequestVenue requestVenue);
@@ -29,4 +29,7 @@ public interface VenueRepository {
     @ResultMap("VenueMapper")
     @Delete("DELETE FROM venues WHERE venue_id = #{venueId}")
     int deleteVenue(Long venueId);
+
+    @Select("SELECT COUNT(*) > 0 FROM venues WHERE venue_id = #{venueId}")
+    boolean venueExists(Long venueId);
 }

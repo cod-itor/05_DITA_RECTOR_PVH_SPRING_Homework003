@@ -1,8 +1,8 @@
 package com.hrd.springhomework03.Controller;
 
-import com.hrd.springhomework03.Model.Entity.Venue;
 import com.hrd.springhomework03.Model.Request.RequestVenue;
 import com.hrd.springhomework03.Model.Response.ApiResponse;
+import com.hrd.springhomework03.Model.Response.ResponseVenue;
 import com.hrd.springhomework03.Service.VenueService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -29,34 +29,34 @@ public class VenueController {
 
     @Operation(summary = "Get All venues")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Venue>>> getAllVenue(
+    public ResponseEntity<ApiResponse<List<ResponseVenue>>> getAllVenue(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        ApiResponse<List<Venue>> response = venueService.getAllVenue(page, size);
+        ApiResponse<List<ResponseVenue>> response = venueService.getAllVenue(page, size);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Get venue by ID")
     @GetMapping("{venue-id}")
-    public ResponseEntity<ApiResponse<Venue>> getVenueById(@PathVariable("venue-id") Long venueId) {
-        ApiResponse<Venue> response = venueService.getVenueById(venueId);
+    public ResponseEntity<ApiResponse<ResponseVenue>> getVenueById(@PathVariable("venue-id") Long venueId) {
+        ApiResponse<ResponseVenue> response = venueService.getVenueById(venueId);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Create A New Venue")
     @PostMapping
-    public ResponseEntity<ApiResponse<Venue>> createVenue(
+    public ResponseEntity<ApiResponse<ResponseVenue>> createVenue(
             @RequestBody RequestVenue requestVenue) {
-        ApiResponse<Venue> response = venueService.createVenue(requestVenue);
+        ApiResponse<ResponseVenue> response = venueService.createVenue(requestVenue);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Update Venue By ID")
     @PutMapping("{venue-id}")
-    public ResponseEntity<ApiResponse<Venue>> updateVenue(
+    public ResponseEntity<ApiResponse<ResponseVenue>> updateVenue(
             @PathVariable("venue-id") Long venueId,
             @RequestBody RequestVenue requestVenue) {
-        ApiResponse<Venue> response = venueService.updateVenue(venueId, requestVenue);
+        ApiResponse<ResponseVenue> response = venueService.updateVenue(venueId, requestVenue);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -67,3 +67,4 @@ public class VenueController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }
+
