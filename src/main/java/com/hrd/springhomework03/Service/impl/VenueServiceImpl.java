@@ -1,10 +1,15 @@
 package com.hrd.springhomework03.Service.impl;
 
+import com.hrd.springhomework03.Exception.BadRequestException;
+import com.hrd.springhomework03.Exception.NotFoundException;
 import com.hrd.springhomework03.Model.Entity.Venue;
 import com.hrd.springhomework03.Model.Request.RequestVenue;
 import com.hrd.springhomework03.Model.Response.ApiResponse;
+import com.hrd.springhomework03.Model.Response.ResponseVenue;
 import com.hrd.springhomework03.Repository.VenueRepository;
 import com.hrd.springhomework03.Service.VenueService;
+import com.hrd.springhomework03.mapper.VenueMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -12,100 +17,98 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VenueServiceImpl implements VenueService {
 
     private final VenueRepository venueRepository;
-
-    public VenueServiceImpl(VenueRepository venueRepository) {
-        this.venueRepository = venueRepository;
-    }
+    private final VenueMapper venueMapper;
 
     @Override
-    public ApiResponse<List<Venue>> getAllVenue(Integer page, Integer size) {
+    public ApiResponse<List<ResponseVenue>> getAllVenue(Integer page, Integer size) {
         Integer offset = size * (page - 1);
         List<Venue> venues = venueRepository.getAllVenue(offset, size);
-        return ApiResponse.<List<Venue>>builder()
+        List<ResponseVenue> responseVenues = venueMapper.entitiesToResponseVenues(venues);
+        return ApiResponse.<List<ResponseVenue>>builder()
                 .success(true)
                 .status(HttpStatus.OK.value())
                 .messages("Venues retrieved successfully")
-                .payload(venues)
+                .payload(responseVenues)
                 .timestamp(Instant.now())
                 .build();
     }
 
     @Override
-    public ApiResponse<Venue> getVenueById(Long venueId) {
-        Venue venue = venueRepository.getVenueById(venueId);
-
-        if (venue != null) {
-            return ApiResponse.<Venue>builder()
-                    .success(true)
-                    .status(HttpStatus.OK.value())
-                    .messages("Venue fetched successfully")
-                    .payload(venue)
-                    .timestamp(Instant.now())
-                    .build();
-        }
-        return ApiResponse.<Venue>builder()
-                .success(false)
-                .status(HttpStatus.NOT_FOUND.value())
-                .messages("No venue found with the given ID")
-                .timestamp(Instant.now())
-                .build();
-    }
-
-    @Override
-    public ApiResponse<Venue> createVenue(RequestVenue requestVenue) {
-        Venue created = venueRepository.createVenue(requestVenue);
-
-        if (created == null) {
-            return ApiResponse.<Venue>builder()
-                    .success(false)
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .messages("Failed to create venue")
-                    .payload(null)
-                    .timestamp(Instant.now())
-                    .build();
-        }
-
-        return ApiResponse.<Venue>builder()
-                .success(true)
-                .status(HttpStatus.CREATED.value())
-                .messages("Venue created successfully")
-                .payload(created)
-                .timestamp(Instant.now())
-                .build();
-    }
-
-    @Override
-    public ApiResponse<Venue> updateVenue(Long venueId, RequestVenue requestVenue) {
+    public ApiResponse<ResponseVenue> getVenueById(Long venueId) {
         Venue venue = venueRepository.getVenueById(venueId);
 
         if (venue == null) {
-            return ApiResponse.<Venue>builder()
-                    .success(false)
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .messages("No venue found with the given ID")
-                    .timestamp(Instant.now())
-                    .build();
+            throw new NotFoundException("No venue found with the given ID: " + venueId);
+        }
+
+        ResponseVenue responseVenue = venueMapper.entityToResponseVenue(venue);
+        return ApiResponse.<ResponseVenue>builder()
+                .success(true)
+                .status(HttpStatus.OK.value())
+                .messages("Venue fetched successfully")
+                .payload(responseVenue)
+                .timestamp(Instant.now())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ResponseVenue> createVenue(RequestVenue requestVenue) {
+        if (requestVenue.getVenueName() == null || requestVenue.getVenueName().trim().isEmpty()) {
+            throw new BadRequestException("Venue name cannot be empty");
+        }
+
+        if (requestVenue.getLocation() == null || requestVenue.getLocation().trim().isEmpty()) {
+            throw new BadRequestException("Location cannot be empty");
+        }
+
+        Venue created = venueRepository.createVenue(requestVenue);
+
+        if (created == null) {
+            throw new BadRequestException("Failed to create venue");
+        }
+
+        ResponseVenue responseVenue = venueMapper.entityToResponseVenue(created);
+        return ApiResponse.<ResponseVenue>builder()
+                .success(true)
+                .status(HttpStatus.CREATED.value())
+                .messages("Venue created successfully")
+                .payload(responseVenue)
+                .timestamp(Instant.now())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<ResponseVenue> updateVenue(Long venueId, RequestVenue requestVenue) {
+        Venue venue = venueRepository.getVenueById(venueId);
+
+        if (venue == null) {
+            throw new NotFoundException("No venue found with the given ID: " + venueId);
+        }
+
+        if (requestVenue.getVenueName() == null || requestVenue.getVenueName().trim().isEmpty()) {
+            throw new BadRequestException("Venue name cannot be empty");
+        }
+
+        if (requestVenue.getLocation() == null || requestVenue.getLocation().trim().isEmpty()) {
+            throw new BadRequestException("Location cannot be empty");
         }
 
         Venue updated = venueRepository.updateVenue(venueId, requestVenue);
 
         if (updated == null) {
-            return ApiResponse.<Venue>builder()
-                    .success(false)
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .messages("Failed to update venue")
-                    .timestamp(Instant.now())
-                    .build();
+            throw new BadRequestException("Failed to update venue");
         }
 
-        return ApiResponse.<Venue>builder()
+        ResponseVenue responseVenue = venueMapper.entityToResponseVenue(updated);
+        return ApiResponse.<ResponseVenue>builder()
                 .success(true)
                 .status(HttpStatus.OK.value())
                 .messages("Venue updated successfully")
-                .payload(updated)
+                .payload(responseVenue)
                 .timestamp(Instant.now())
                 .build();
     }
@@ -115,28 +118,19 @@ public class VenueServiceImpl implements VenueService {
         Venue venue = venueRepository.getVenueById(venueId);
 
         if (venue == null) {
-            return ApiResponse.<Void>builder()
-                    .success(false)
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .messages("No venue found with the given ID")
-                    .timestamp(Instant.now())
-                    .build();
+            throw new NotFoundException("No venue found with the given ID: " + venueId);
         }
 
         int rowsDeleted = venueRepository.deleteVenue(venueId);
 
-        if (rowsDeleted > 0) {
-            return ApiResponse.<Void>builder()
-                    .success(true)
-                    .status(HttpStatus.OK.value())
-                    .messages("Venue deleted successfully")
-                    .timestamp(Instant.now())
-                    .build();
+        if (rowsDeleted <= 0) {
+            throw new BadRequestException("Failed to delete venue");
         }
+
         return ApiResponse.<Void>builder()
-                .success(false)
-                .status(HttpStatus.NOT_FOUND.value())
-                .messages("No venue found with the given ID")
+                .success(true)
+                .status(HttpStatus.OK.value())
+                .messages("Venue deleted successfully")
                 .timestamp(Instant.now())
                 .build();
     }

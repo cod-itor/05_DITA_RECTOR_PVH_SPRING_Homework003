@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestEvent {
-    private String eventName;
-    private LocalDateTime eventDate;
-    private Long venueId;
+public class RequestAttendees {
+    private String attendeeName;
+    private String email;
 }

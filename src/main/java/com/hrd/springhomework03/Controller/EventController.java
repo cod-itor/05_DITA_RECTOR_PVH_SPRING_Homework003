@@ -1,8 +1,8 @@
 package com.hrd.springhomework03.Controller;
 
-import com.hrd.springhomework03.Model.Entity.Events;
 import com.hrd.springhomework03.Model.Request.RequestEvent;
 import com.hrd.springhomework03.Model.Response.ApiResponse;
+import com.hrd.springhomework03.Model.Response.ResponseEvent;
 import com.hrd.springhomework03.Service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
@@ -30,34 +30,34 @@ public class EventController {
 
     @Operation(summary = "Get All events")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Events>>> getAllEvents(
+    public ResponseEntity<ApiResponse<List<ResponseEvent>>> getAllEvents(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        ApiResponse<List<Events>> response = eventService.getAllEvents(page, size);
+        ApiResponse<List<ResponseEvent>> response = eventService.getAllEvents(page, size);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Get event by ID")
     @GetMapping("{event-id}")
-    public ResponseEntity<ApiResponse<Events>> getEventById(@PathVariable("event-id") Long eventId) {
-        ApiResponse<Events> response = eventService.getEventById(eventId);
+    public ResponseEntity<ApiResponse<ResponseEvent>> getEventById(@PathVariable("event-id") Long eventId) {
+        ApiResponse<ResponseEvent> response = eventService.getEventById(eventId);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Create A New Event")
     @PostMapping
-    public ResponseEntity<ApiResponse<Events>> createEvent(
+    public ResponseEntity<ApiResponse<ResponseEvent>> createEvent(
             @RequestBody RequestEvent requestEvent) {
-        ApiResponse<Events> response = eventService.createEvent(requestEvent);
+        ApiResponse<ResponseEvent> response = eventService.createEvent(requestEvent);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @Operation(summary = "Update Event By ID")
     @PutMapping("{event-id}")
-    public ResponseEntity<ApiResponse<Events>> updateEvent(
+    public ResponseEntity<ApiResponse<ResponseEvent>> updateEvent(
             @PathVariable("event-id") Long eventId,
             @RequestBody RequestEvent requestEvent) {
-        ApiResponse<Events> response = eventService.updateEvent(eventId, requestEvent);
+        ApiResponse<ResponseEvent> response = eventService.updateEvent(eventId, requestEvent);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -67,8 +67,4 @@ public class EventController {
         ApiResponse<Void> response = eventService.deleteEvent(eventId);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
-
-
-
-
 }
